@@ -154,10 +154,10 @@ if uploaded_file is not None:
     contains_100 = df["Sample Size"].str.contains("100")
 
     # Filter rows where "Sample Size" contains "100"
-    total_sample = df[contains_100][column_list].reset_index()
+    total_sample = df[contains_100][column_list].reset_index(drop=True)
 
     # Filter rows where "Sample Size" does not contain "100"
-    required_sample = df[~contains_100][column_list].reset_index()
+    required_sample = df[~contains_100][column_list].reset_index(drop=True)
 
     st.write(total_sample)
     st.write(required_sample)
