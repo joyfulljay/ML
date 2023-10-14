@@ -117,16 +117,16 @@ if uploaded_file is not None:
                         sp = feature[0].split("_")
                         a = sp[0]
                         b = sp[1]
-                        st.write(f"{a} is not {b} and ", end='')
+                        st.write(f"{a} is not {b} ", end='')
                     elif (threshold[0] == 0.5) and (feature[1] == "right"):
                         sp = feature[0].split("_")
                         a = sp[0]
                         b = sp[1]
-                        st.write(f"{a} is {b} and ", end='')
+                        st.write(f"{a} is {b} ", end='')
                     elif feature[1] == "left":
-                        st.write(f"{feature[0]} values less than {threshold[0]} and ", end='')
+                        st.write(f"{feature[0]} values less than {threshold[0]} ", end='')
                     elif feature[1] == "right":
-                        st.write(f"{feature[0]} values greater than {threshold[0]} and ", end='')
+                        st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
 
 
     information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic)
