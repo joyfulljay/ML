@@ -10,16 +10,18 @@ from io import BytesIO
 
 st.write('Your binary decision column should be at last, :sunglasses:')
 
-user_input = st.text_input("Delimiter", ",")
+Delimiter = st.text_input("Delimiter", ",")
+min_samples_split = st.text_input("Choose min Samples required for further split", 1000)
+max_depth = st.text_input("Choose max depth of decision tree", 5)
 uploaded_file = st.file_uploader("Choose a CSV or Excel file", type=["csv", "xlsx"], accept_multiple_files=False)
 
 if uploaded_file is not None:
     # To read file as bytes:
     # Can be used wherever a "file-like" object is accepted:
     try:
-        bank = pd.read_csv(uploaded_file, sep=f"{user_input}")
+        bank = pd.read_csv(uploaded_file, sep=f"{Delimiter}")
     except:
-        bank = pd.read_excel(uploaded_file, sep=f"{user_input}")
+        bank = pd.read_excel(uploaded_file, sep=f"{Delimiter}")
 
     # bank = pd.read_csv("data/bank-full.csv", sep=';')
 
@@ -163,6 +165,8 @@ if uploaded_file is not None:
     st.write(required_sample)
 
     graph = graphviz.Source(dot_data)
+
+    graphviz.executables["dot"] = "data"
 
     filename = f"decision_tree_fin_{random.randint(1, 100)}"
 
