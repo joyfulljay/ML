@@ -162,7 +162,7 @@ if uploaded_file is not None:
     required_sample = df[~contains_100][column_list].reset_index(drop=True)
 
     # Remove duplicate rows
-    required_sample = required_sample.drop_duplicates()
+    required_sample = required_sample.drop_duplicates(subset=["Conditions"], keep="first")
 
     st.write(total_sample)
     st.write(required_sample)
