@@ -81,7 +81,7 @@ if uploaded_file is not None:
     node_info = inorder_traversal(tree=clf, i=0, node_information={}, node_sequence={}, sign="left")
 
 
-    def information_typer(node_information, tree, gini_threshold, columns, dic, df):
+    def information_typer(node_information, tree, gini_threshold, columns, dic):
         information = []
         node_information = [y for x, y in node_information.items()]
         node_information = sorted(node_information, key=lambda x: x[1])
@@ -104,40 +104,49 @@ if uploaded_file is not None:
                                                                                      dic[node]]
 
             information.append(information_dic)
-        # Initialize an empty list to store formatted information
-        formatted_info = []
 
-        # Format and append information to the list
+        data = []
         for info in information:
-            formatted_info.append('---')
+            d = {'Conditions': '', 'Sample Size': None, 'Ratio': None}
+
             for feature, threshold in info.items():
-                formatted_info.append(f"Sample Size: {threshold[2][0]}, Ratio: {threshold[2][1]}")
-                if (threshold[0] == 0.5) and (threshold[1] == 'left'):
-                    sp = feature.split('_')
-                    a = sp[0]
-                    b = sp[1]
-                    formatted_info.append(f"{a} is not {b}")
-                elif (threshold[0] == 0.5) and (threshold[1] == 'right'):
-                    sp = feature.split('_')
-                    a = sp[0]
-                    b = sp[1]
-                    formatted_info.append(f"{a} is {b}")
-                elif threshold[1] == 'left':
-                    formatted_info.append(f"{feature} values less than {threshold[0]}")
-                elif threshold[1] == 'right':
-                    formatted_info.append(f"{feature} values greater than {threshold[0]}")
 
-        # Join the list elements with line breaks
-        formatted_text = '\n'.join(formatted_info)
+                if feature[0] == list(info.keys())[-1][0]:
+                    d["Sample Size"] = threshold[1][0]
+                    d["Ratio"] = threshold[1][1]
+                    st.write(f"Having total sample size is {threshold[1][0]} and ratio of yes is {threshold[1][1]}")
+                    st.write("--------------------------------------------------------------------")
+                else:
+                    if (threshold[0] == 0.5) and (feature[1] == "left"):
+                        sp = feature[0].split("_")
+                        a = sp[0]
+                        b = sp[1]
+                        st.write(f"{a} is not {b} ", end='')
+                        d["Conditions"] = d["Conditions"] + f"{a} is not {b}" + "\n"
+                    elif (threshold[0] == 0.5) and (feature[1] == "right"):
+                        sp = feature[0].split("_")
+                        a = sp[0]
+                        b = sp[1]
+                        st.write(f"{a} is {b} ", end='')
+                        d["Conditions"] = d["Conditions"] + f"{a} is not {b}" + "\n"
+                    elif feature[1] == "left":
+                        st.write(f"{feature[0]} values less than {threshold[0]} ", end='')
+                        d["Conditions"] = d["Conditions"] + f"{feature[0]} values less than {threshold[0]}" + "\n"
+                    elif feature[1] == "right":
+                        st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
+                        d["Conditions"] = d["Conditions"] + f"{feature[0]} values greater than {threshold[0]}" + "\n"
+            data.append(d)
 
-        # Display the formatted text using Streamlit
-        st.text(formatted_text)
+        # Create a DataFrame from the data
+        df = pd.DataFrame(data)
+        df['Conditions'] = df['Conditions'].apply(lambda x: x.replace('\n', '--->'))
+        df.loc[df["Conditions"] == "", "Conditions"] = "Total Sample Stats"
+        df = df[~df["Ratio"].isna()]
 
         return df
 
 
-    df = pd.DataFrame(columns=["Conditions", "Sample Size", "Ratio"])
-    information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic, df=df)
+    information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic)
 
     st.write(df)
 
