@@ -114,26 +114,26 @@ if uploaded_file is not None:
                 if feature[0] == list(info.keys())[-1][0]:
                     d["Sample Size"] = threshold[1][0]
                     d["Ratio"] = threshold[1][1]
-                    st.write(f"Having total sample size is {threshold[1][0]} and ratio of yes is {threshold[1][1]}")
+                    # st.write(f"Having total sample size is {threshold[1][0]} and ratio of yes is {threshold[1][1]}")
                     st.write("--------------------------------------------------------------------")
                 else:
                     if (threshold[0] == 0.5) and (feature[1] == "left"):
                         sp = feature[0].split("_")
                         a = sp[0]
                         b = sp[1]
-                        st.write(f"{a} is not {b} ", end='')
+                        # st.write(f"{a} is not {b} ", end='')
                         d["Conditions"] = d["Conditions"] + f"{a} is not {b}" + "\n"
                     elif (threshold[0] == 0.5) and (feature[1] == "right"):
                         sp = feature[0].split("_")
                         a = sp[0]
                         b = sp[1]
-                        st.write(f"{a} is {b} ", end='')
+                        # st.write(f"{a} is {b} ", end='')
                         d["Conditions"] = d["Conditions"] + f"{a} is not {b}" + "\n"
                     elif feature[1] == "left":
-                        st.write(f"{feature[0]} values less than {threshold[0]} ", end='')
+                        # st.write(f"{feature[0]} values less than {threshold[0]} ", end='')
                         d["Conditions"] = d["Conditions"] + f"{feature[0]} values less than {threshold[0]}" + "\n"
                     elif feature[1] == "right":
-                        st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
+                        # st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
                         d["Conditions"] = d["Conditions"] + f"{feature[0]} values greater than {threshold[0]}" + "\n"
             data.append(d)
 
