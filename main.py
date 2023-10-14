@@ -23,9 +23,6 @@ if uploaded_file is not None:
 
     # bank = pd.read_csv("data/bank-full.csv", sep=';')
 
-
-
-
     bank = pd.get_dummies(bank, drop_first=True)
     last_column_name = bank.columns[-1]
     X = bank.drop(last_column_name, axis=1)
@@ -84,8 +81,6 @@ if uploaded_file is not None:
     node_info = inorder_traversal(tree=clf, i=0, node_information={}, node_sequence={}, sign="left")
 
 
-
-
     def information_typer(node_information, tree, gini_threshold, columns, dic, df):
         information = []
         node_information = [y for x, y in node_information.items()]
@@ -110,51 +105,44 @@ if uploaded_file is not None:
 
             information.append(information_dic)
 
-
-
         for info in information:
+            d = {'Conditions': '', 'Sample Size': None, 'Ratio': None}
             for feature, threshold in info.items():
-                d = {}
-                feature_name, feature_type = feature.split('_')
-
-                if feature == list(information[-1].keys())[0]:
-                    d["Sample Size"] = threshold[0]
-                    d["Ratio"] = threshold[1]
-                    st.write(f"Having a total sample size of {threshold[0]} and a ratio of yes is {threshold[1]}")
+                if feature[0] == list(info.keys())[-1][0]:
+                    d["Sample Size"] = threshold[1][0]
+                    d["Ratio"] = threshold[1][1]
+                    st.write(f"Having total sample size is {threshold[1][0]} and ratio of yes is {threshold[1][1]}")
                     st.write("--------------------------------------------------------------------")
                 else:
-                    sp = feature_name.split('_')
-                    a = sp[0]
-                    b = sp[1]
-                    condition = None
-
-                    if (threshold[0] == 0.5) and (feature_type == "left"):
-                        condition = f"{a} is not {b}"
-                        st.write(f"{a} is not {b}", end='')
-                    elif (threshold[0] == 0.5) and (feature_type == "right"):
-                        condition = f"{a} is {b}"
-                        st.write(f"{a} is {b}", end='')
-                    elif feature_type == "left":
-                        condition = f"{feature_name} values less than {threshold[0]}"
-                        st.write(f"{feature_name} values less than {threshold[0]}", end='')
-                    elif feature_type == "right":
-                        condition = f"{feature_name} values greater than {threshold[0]}"
-                        st.write(f"{feature_name} values greater than {threshold[0]}", end='')
-
-                    d["Conditions"] = condition
-
+                    if (threshold[0] == 0.5) and (feature[1] == "left"):
+                        sp = feature[0].split("_")
+                        a = sp[0]
+                        b = sp[1]
+                        st.write(f"{a} is not {b} ", end='')
+                        d["Conditions"] = d["Conditions"] + f"{a} is not {b}" + "\n"
+                    elif (threshold[0] == 0.5) and (feature[1] == "right"):
+                        sp = feature[0].split("_")
+                        a = sp[0]
+                        b = sp[1]
+                        st.write(f"{a} is {b} ", end='')
+                        d["Conditions"] = d["Conditions"] + f"{a} is not {b}" + "\n"
+                    elif feature[1] == "left":
+                        st.write(f"{feature[0]} values less than {threshold[0]} ", end='')
+                        d["Conditions"] = d["Conditions"] + f"{feature[0]} values less than {threshold[0]}" + "\n"
+                    elif feature[1] == "right":
+                        st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
+                        d["Conditions"] = d["Conditions"] + f"{feature[0]} values greater than {threshold[0]}"+ "\n"
                 df = df.append(d, ignore_index=True)
+                # Replace newline characters with HTML line break tags for display
+                df['Conditions'] = df['Conditions'].apply(lambda x: x.replace('\n', '<br>'))
 
 
     df = pd.DataFrame(columns=["Conditions", "Sample Size", "Ratio"])
-    information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic, df = df)
+    information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic, df=df)
 
     st.write(df)
 
     graph = graphviz.Source(dot_data)
-
-
-
 
     filename = f"decision_tree_fin_{random.randint(1, 100)}"
 
@@ -163,7 +151,6 @@ if uploaded_file is not None:
 
     # Display the image in Streamlit
     # st.image(image, caption="Graphviz Graph", use_column_width=True)
-
 
     st.image(graph.render(format='png', filename=filename))
 
