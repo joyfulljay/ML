@@ -107,7 +107,9 @@ if uploaded_file is not None:
 
         for info in information:
             d = {'Conditions': '', 'Sample Size': None, 'Ratio': None}
+
             for feature, threshold in info.items():
+
                 if feature[0] == list(info.keys())[-1][0]:
                     d["Sample Size"] = threshold[1][0]
                     d["Ratio"] = threshold[1][1]
@@ -131,10 +133,10 @@ if uploaded_file is not None:
                         d["Conditions"] = d["Conditions"] + f"{feature[0]} values less than {threshold[0]}" + "\n"
                     elif feature[1] == "right":
                         st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
-                        d["Conditions"] = d["Conditions"] + f"{feature[0]} values greater than {threshold[0]}"+ "\n"
-                df = df.append(d, ignore_index=True)
-                # Replace newline characters with HTML line break tags for display
-                df['Conditions'] = df['Conditions'].apply(lambda x: x.replace('\n', '<br>'))
+                        d["Conditions"] = d["Conditions"] + f"{feature[0]} values greater than {threshold[0]}" + "\n"
+            df = df.append(d, ignore_index=True)
+            # Replace newline characters with HTML line break tags for display
+            df['Conditions'] = df['Conditions'].apply(lambda x: x.replace('\n', '<br>'))
 
 
     df = pd.DataFrame(columns=["Conditions", "Sample Size", "Ratio"])
