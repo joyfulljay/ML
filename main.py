@@ -3,8 +3,7 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 import graphviz
 from PIL import Image
-import random
-from io import BytesIO
+import time
 
 # import matplotlib.pyplot as plt
 
@@ -167,12 +166,13 @@ if uploaded_file is not None:
     st.write(total_sample)
     st.write(required_sample)
 
+
     graph = graphviz.Source(dot_data)
 
-    filename = f"decision_tree_fin_{random.randint(1, 100)}"
+    filename = f"decision_tree_fin_{time.time()}"
 
     graph.render(format='png', filename=filename)
 
-    image = Image.open(filename)
+    image = Image.open(f"{filename}.png")
 
     st.image(image)
