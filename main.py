@@ -148,6 +148,15 @@ if uploaded_file is not None:
 
     df = information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic)
 
+    # Check if "100" is present in the "Sample Size" column
+    contains_100 = df["Sample Size"].str.contains("100")
+
+    # Filter rows where "Sample Size" contains "100"
+    total_sample = df[contains_100]
+
+    # Filter rows where "Sample Size" does not contain "100"
+    required_sample = df[~contains_100]
+
     st.write(df)
 
     graph = graphviz.Source(dot_data)
