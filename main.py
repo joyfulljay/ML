@@ -131,7 +131,7 @@ if uploaded_file is not None:
     filename = f"decision_tree_fin_{random.randint(1, 100)}"
 
     # Render the graph to an image
-    image = Image.open(BytesIO(graph.draw(format="png")))
+    image = Image.open(BytesIO(dot_data.draw(format="png")))
 
     # Display the image in Streamlit
     st.image(image, caption="Graphviz Graph", use_column_width=True)
