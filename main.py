@@ -104,41 +104,34 @@ if uploaded_file is not None:
                                                                                      dic[node]]
 
             information.append(information_dic)
+        # Initialize an empty list to store formatted information
+        formatted_info = []
 
+        # Format and append information to the list
         for info in information:
-            d = {'Conditions': '', 'Sample Size': None, 'Ratio': None}
-
+            formatted_info.append('---')
             for feature, threshold in info.items():
+                formatted_info.append(f"Sample Size: {threshold[2][0]}, Ratio: {threshold[2][1]}")
+                if (threshold[0] == 0.5) and (threshold[1] == 'left'):
+                    sp = feature.split('_')
+                    a = sp[0]
+                    b = sp[1]
+                    formatted_info.append(f"{a} is not {b}")
+                elif (threshold[0] == 0.5) and (threshold[1] == 'right'):
+                    sp = feature.split('_')
+                    a = sp[0]
+                    b = sp[1]
+                    formatted_info.append(f"{a} is {b}")
+                elif threshold[1] == 'left':
+                    formatted_info.append(f"{feature} values less than {threshold[0]}")
+                elif threshold[1] == 'right':
+                    formatted_info.append(f"{feature} values greater than {threshold[0]}")
 
-                if feature[0] == list(info.keys())[-1][0]:
-                    d["Sample Size"] = threshold[1][0]
-                    d["Ratio"] = threshold[1][1]
-                    st.write(f"Having total sample size is {threshold[1][0]} and ratio of yes is {threshold[1][1]}")
-                    st.write("--------------------------------------------------------------------")
-                else:
-                    if (threshold[0] == 0.5) and (feature[1] == "left"):
-                        sp = feature[0].split("_")
-                        a = sp[0]
-                        b = sp[1]
-                        st.write(f"{a} is not {b} ", end='')
-                        d["Conditions"] = d["Conditions"] + f"{a} is not {b}" + "\n"
-                    elif (threshold[0] == 0.5) and (feature[1] == "right"):
-                        sp = feature[0].split("_")
-                        a = sp[0]
-                        b = sp[1]
-                        st.write(f"{a} is {b} ", end='')
-                        d["Conditions"] = d["Conditions"] + f"{a} is not {b}" + "\n"
-                    elif feature[1] == "left":
-                        st.write(f"{feature[0]} values less than {threshold[0]} ", end='')
-                        d["Conditions"] = d["Conditions"] + f"{feature[0]} values less than {threshold[0]}" + "\n"
-                    elif feature[1] == "right":
-                        st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
-                        d["Conditions"] = d["Conditions"] + f"{feature[0]} values greater than {threshold[0]}" + "\n"
-            df = df.append(d, ignore_index=True)
+        # Join the list elements with line breaks
+        formatted_text = '\n'.join(formatted_info)
 
-        df['Conditions'] = df['Conditions'].apply(lambda x: x.replace('\n', '--->'))
-        df.loc[df["Conditions"] == "", "Conditions"] = "Total Sample Stats"
-        df = df[~df["Ratio"].isna()]
+        # Display the formatted text using Streamlit
+        st.text(formatted_text)
 
         return df
 
