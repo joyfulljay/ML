@@ -134,7 +134,7 @@ if uploaded_file is not None:
                     elif feature[1] == "right":
                         st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
                         d["Conditions"] = d["Conditions"] + f"{feature[0]} values greater than {threshold[0]}" + "\n"
-            # df = df.append(d, ignore_index=True)
+            df = df.append(d, ignore_index=True)
 
         df['Conditions'] = df['Conditions'].apply(lambda x: x.replace('\n', '--->'))
         df.loc[df["Conditions"] == "", "Conditions"] = "Total Sample Stats"
