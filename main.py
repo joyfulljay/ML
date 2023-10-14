@@ -4,7 +4,6 @@ from sklearn.tree import DecisionTreeClassifier, export_graphviz
 import graphviz
 from PIL import Image
 import random
-import os
 from io import BytesIO
 
 # import matplotlib.pyplot as plt
@@ -165,14 +164,11 @@ if uploaded_file is not None:
     st.write(total_sample)
     st.write(required_sample)
 
-    # Set the path to the Graphviz dot executable
-    os.environ["PATH"] += os.pathsep + "/bank/"
-
     graph = graphviz.Source(dot_data)
 
     filename = f"decision_tree_fin_{random.randint(1, 100)}"
 
-    st.image(graph.render(format='png'))
+    graph.render(format='png', filename=filename)
 
     image = Image.open(filename)
 
