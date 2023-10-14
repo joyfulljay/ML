@@ -146,7 +146,7 @@ if uploaded_file is not None:
         return df
 
 
-    information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic)
+    df = information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic)
 
     st.write(df)
 
