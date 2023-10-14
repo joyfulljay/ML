@@ -115,30 +115,34 @@ if uploaded_file is not None:
         for info in information:
             for feature, threshold in info.items():
                 d = {}
-                if feature[0] == list(info.keys())[-1][0]:
-                    d["Sample Size"] = threshold[1][0]
-                    d["Ratio"] = threshold[1][1]
-                    st.write(f"Having total sample size is {threshold[1][0]} and ratio of yes is {threshold[1][1]}")
+                feature_name, feature_type = feature.split('_')
+
+                if feature == list(information[-1].keys())[0]:
+                    d["Sample Size"] = threshold[0]
+                    d["Ratio"] = threshold[1]
+                    st.write(f"Having a total sample size of {threshold[0]} and a ratio of yes is {threshold[1]}")
                     st.write("--------------------------------------------------------------------")
                 else:
-                    if (threshold[0] == 0.5) and (feature[1] == "left"):
-                        sp = feature[0].split("_")
-                        a = sp[0]
-                        b = sp[1]
-                        st.write(f"{a} is not {b} ", end='')
-                        d["Conditions"] = f"{a} is not {b} "
-                    elif (threshold[0] == 0.5) and (feature[1] == "right"):
-                        sp = feature[0].split("_")
-                        a = sp[0]
-                        b = sp[1]
-                        st.write(f"{a} is {b} ", end='')
-                        d["Conditions"] = f"{a} is not {b} "
-                    elif feature[1] == "left":
-                        st.write(f"{feature[0]} values less than {threshold[0]} ", end='')
-                        d["Conditions"] = f"{a} is not {b} "
-                    elif feature[1] == "right":
-                        st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
-                        d["Conditions"] = f"{a} is not {b} "
+                    sp = feature_name.split('_')
+                    a = sp[0]
+                    b = sp[1]
+                    condition = None
+
+                    if (threshold[0] == 0.5) and (feature_type == "left"):
+                        condition = f"{a} is not {b}"
+                        st.write(f"{a} is not {b}", end='')
+                    elif (threshold[0] == 0.5) and (feature_type == "right"):
+                        condition = f"{a} is {b}"
+                        st.write(f"{a} is {b}", end='')
+                    elif feature_type == "left":
+                        condition = f"{feature_name} values less than {threshold[0]}"
+                        st.write(f"{feature_name} values less than {threshold[0]}", end='')
+                    elif feature_type == "right":
+                        condition = f"{feature_name} values greater than {threshold[0]}"
+                        st.write(f"{feature_name} values greater than {threshold[0]}", end='')
+
+                    d["Conditions"] = condition
+
                 df = df.append(d, ignore_index=True)
 
 
