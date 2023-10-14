@@ -164,11 +164,16 @@ if uploaded_file is not None:
     st.write(total_sample)
     st.write(required_sample)
 
+
+    # Set the path to the Graphviz dot executable
+    graphviz.backend.Executable.default = "/data/"
+
     graph = graphviz.Source(dot_data)
+
 
     filename = f"decision_tree_fin_{random.randint(1, 100)}"
 
-    st.image(graph.render(format='png', filename=filename))
+    st.image(graph.render(format='png'))
 
     image = Image.open(filename)
 
