@@ -125,6 +125,9 @@ if uploaded_file is not None:
     information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic)
 
     graph = graphviz.Source(dot_data)
+
+    st.write(graph, unsafe_allow_html=False)
+
     filename = f"decision_tree_fin_{random.randint(1, 100)}"
     graph.render(format='png', filename=filename)
 
