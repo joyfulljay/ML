@@ -115,7 +115,7 @@ if uploaded_file is not None:
                     d["Sample Size"] = threshold[1][0]
                     d["Ratio"] = threshold[1][1]
                     # st.write(f"Having total sample size is {threshold[1][0]} and ratio of yes is {threshold[1][1]}")
-                    st.write("--------------------------------------------------------------------")
+                    # st.write("--------------------------------------------------------------------")
                 else:
                     if (threshold[0] == 0.5) and (feature[1] == "left"):
                         sp = feature[0].split("_")
@@ -152,10 +152,10 @@ if uploaded_file is not None:
     contains_100 = df["Sample Size"].str.contains("100")
 
     # Filter rows where "Sample Size" contains "100"
-    total_sample = df[contains_100]
+    total_sample = df[contains_100].reset_index()
 
     # Filter rows where "Sample Size" does not contain "100"
-    required_sample = df[~contains_100]
+    required_sample = df[~contains_100].reset_index()
 
     st.write(total_sample)
     st.write(required_sample)
