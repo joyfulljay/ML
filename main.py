@@ -7,7 +7,7 @@ import random
 
 # import matplotlib.pyplot as plt
 
-st.write('Your column should be at last, *World!* :sunglasses:')
+st.write('Your binary decision column should be at last, :sunglasses:')
 
 user_input = st.text_input("Delimiter", ",")
 uploaded_file = st.file_uploader("Choose a CSV or Excel file", type=["csv", "xlsx"], accept_multiple_files=False)
