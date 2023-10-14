@@ -3,18 +3,22 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 import graphviz
 from PIL import Image
+import random
 
 # import matplotlib.pyplot as plt
 
-uploaded_file = st.file_uploader("Choose a CSV file", type=["csv", "xlsx"], accept_multiple_files=False)
+st.write('Your column should be at last, *World!* :sunglasses:')
+
+user_input = st.text_input("Delimiter", ",")
+uploaded_file = st.file_uploader("Choose a CSV or Excel file", type=["csv", "xlsx"], accept_multiple_files=False)
 
 if uploaded_file is not None:
     # To read file as bytes:
     # Can be used wherever a "file-like" object is accepted:
     try:
-        bank = pd.read_csv(uploaded_file, sep=";")
+        bank = pd.read_csv(uploaded_file, sep=f"{user_input}")
     except:
-        bank = pd.read_excel(uploaded_file, sep=";")
+        bank = pd.read_excel(uploaded_file, sep=f"{user_input}")
 
     # bank = pd.read_csv("data/bank-full.csv", sep=';')
     bank = pd.get_dummies(bank, drop_first=True)
@@ -116,8 +120,9 @@ if uploaded_file is not None:
     information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic)
 
     graph = graphviz.Source(dot_data)
-    graph.render(format='png', filename="decision_tree_fin")
+    filename = f"decision_tree_fin_{random.randint(1, 100)}"
+    graph.render(format='png', filename=filename)
 
-    image = Image.open('decision_tree_fin.png')
+    image = Image.open(filename)
 
     st.image(image)
