@@ -84,7 +84,9 @@ if uploaded_file is not None:
     node_info = inorder_traversal(tree=clf, i=0, node_information={}, node_sequence={}, sign="left")
 
 
-    def information_typer(node_information, tree, gini_threshold, columns, dic):
+
+
+    def information_typer(node_information, tree, gini_threshold, columns, dic, df):
         information = []
         node_information = [y for x, y in node_information.items()]
         node_information = sorted(node_information, key=lambda x: x[1])
@@ -107,9 +109,15 @@ if uploaded_file is not None:
                                                                                      dic[node]]
 
             information.append(information_dic)
+
+
+
         for info in information:
             for feature, threshold in info.items():
+                d = {}
                 if feature[0] == list(info.keys())[-1][0]:
+                    d["Sample Size"] = threshold[1][0]
+                    d["Ratio"] = threshold[1][1]
                     st.write(f"Having total sample size is {threshold[1][0]} and ratio of yes is {threshold[1][1]}")
                     st.write("--------------------------------------------------------------------")
                 else:
@@ -118,20 +126,30 @@ if uploaded_file is not None:
                         a = sp[0]
                         b = sp[1]
                         st.write(f"{a} is not {b} ", end='')
+                        d["Conditions"] = f"{a} is not {b} "
                     elif (threshold[0] == 0.5) and (feature[1] == "right"):
                         sp = feature[0].split("_")
                         a = sp[0]
                         b = sp[1]
                         st.write(f"{a} is {b} ", end='')
+                        d["Conditions"] = f"{a} is not {b} "
                     elif feature[1] == "left":
                         st.write(f"{feature[0]} values less than {threshold[0]} ", end='')
+                        d["Conditions"] = f"{a} is not {b} "
                     elif feature[1] == "right":
                         st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
+                        d["Conditions"] = f"{a} is not {b} "
+                df = df.append(d, ignore_index=True)
 
 
-    information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic)
+    df = pd.DataFrame(columns=["Conditions", "Sample Size", "Ratio"])
+    information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic, df = df)
+
+    st.write(df)
 
     graph = graphviz.Source(dot_data)
+
+
 
 
     filename = f"decision_tree_fin_{random.randint(1, 100)}"
