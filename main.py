@@ -4,6 +4,7 @@ from sklearn.tree import DecisionTreeClassifier, export_graphviz
 import graphviz
 from PIL import Image
 import random
+from io import BytesIO
 
 # import matplotlib.pyplot as plt
 
@@ -126,11 +127,17 @@ if uploaded_file is not None:
 
     graph = graphviz.Source(dot_data)
 
-    st.write(graph, unsafe_allow_html=False)
 
     filename = f"decision_tree_fin_{random.randint(1, 100)}"
-    graph.render(format='png', filename=filename)
 
-    image = Image.open(filename)
+    # Render the graph to an image
+    image = Image.open(BytesIO(graph.draw(format="png")))
 
-    st.image(image)
+    # Display the image in Streamlit
+    st.image(image, caption="Graphviz Graph", use_column_width=True)
+
+    # graph.render(format='png', filename=filename)
+    #
+    # image = Image.open(filename)
+    #
+    # st.image(image)
