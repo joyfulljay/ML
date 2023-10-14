@@ -114,9 +114,15 @@ if uploaded_file is not None:
                     st.write("--------------------------------------------------------------------")
                 else:
                     if (threshold[0] == 0.5) and (feature[1] == "left"):
-                        st.write(f"{feature[0]} is not True and ", end='')
+                        sp = feature[0].split("_")
+                        a = sp[0]
+                        b = sp[1]
+                        st.write(f"{a} is not {b} and ", end='')
                     elif (threshold[0] == 0.5) and (feature[1] == "right"):
-                        st.write(f"{feature[0]} is True and ", end='')
+                        sp = feature[0].split("_")
+                        a = sp[0]
+                        b = sp[1]
+                        st.write(f"{a} is {b} and ", end='')
                     elif feature[1] == "left":
                         st.write(f"{feature[0]} values less than {threshold[0]} and ", end='')
                     elif feature[1] == "right":
