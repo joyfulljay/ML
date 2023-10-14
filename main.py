@@ -21,9 +21,14 @@ if uploaded_file is not None:
         bank = pd.read_excel(uploaded_file, sep=f"{user_input}")
 
     # bank = pd.read_csv("data/bank-full.csv", sep=';')
+
+
+
+
     bank = pd.get_dummies(bank, drop_first=True)
-    X = bank.drop("y_yes", axis=1)
-    y = bank["y_yes"]
+    last_column_name = bank.columns[-1]
+    X = bank.drop(last_column_name, axis=1)
+    y = bank[last_column_name]
     y = y.astype(str)
     clf = DecisionTreeClassifier(max_depth=5, min_samples_split=1000)
     clf.fit(X, y)
