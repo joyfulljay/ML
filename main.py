@@ -161,6 +161,9 @@ if uploaded_file is not None:
     # Filter rows where "Sample Size" does not contain "100"
     required_sample = df[~contains_100][column_list].reset_index(drop=True)
 
+    # Remove duplicate rows
+    required_sample = required_sample.drop_duplicates()
+
     st.write(total_sample)
     st.write(required_sample)
 
