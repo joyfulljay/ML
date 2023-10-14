@@ -135,8 +135,12 @@ if uploaded_file is not None:
                         st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
                         d["Conditions"] = d["Conditions"] + f"{feature[0]} values greater than {threshold[0]}" + "\n"
             df = df.append(d, ignore_index=True)
-            # Replace newline characters with HTML line break tags for display
-            df['Conditions'] = df['Conditions'].apply(lambda x: x.replace('\n', '<br>'))
+
+        df['Conditions'] = df['Conditions'].apply(lambda x: x.replace('\n', '--->'))
+        df.loc[df["Conditions"] == "", "Conditions"] = "Total Sample Stats"
+        df = df[~df["Ratio"].isna()]
+
+        return df
 
 
     df = pd.DataFrame(columns=["Conditions", "Sample Size", "Ratio"])
