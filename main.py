@@ -39,6 +39,7 @@ if uploaded_file is not None:
                                special_characters=True,
                                proportion=True)
     p = dot_data.split(";\n")
+    st.write(p)
     dic = {}
 
     for i in p:
