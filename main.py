@@ -83,7 +83,7 @@ if uploaded_file is not None:
 
     node_info = inorder_traversal(tree=clf, i=0, node_information={}, node_sequence={}, sign="left")
 
-    st.write(node_info)
+    st.write(list(node_info))
 
 
     def information_typer(node_information, tree, gini_threshold, columns, dic):
