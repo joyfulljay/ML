@@ -54,6 +54,7 @@ if uploaded_file is not None:
         node_sequence[i] = sign
         node_sequence_temp_left = node_sequence.copy()
         node_information[i] = (node_sequence, tree.tree_.impurity[i])
+        st.write(node_sequence)
         if tree.tree_.children_left[i] >= 0:
             node_information = inorder_traversal(tree, tree.tree_.children_left[i], node_information,
                                                  node_sequence_temp_left, "left")
@@ -83,7 +84,7 @@ if uploaded_file is not None:
 
     node_info = inorder_traversal(tree=clf, i=0, node_information={}, node_sequence={}, sign="left")
 
-    st.write(list(node_info))
+
 
 
     def information_typer(node_information, tree, gini_threshold, columns, dic):
