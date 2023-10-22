@@ -8,43 +8,48 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 import streamlit as st
 
-st.write('Please uplaod the queried data')
+
 
 Delimiter = st.text_input("Delimiter", ",")
+st.write('Please uplaod the queried data')
 uploaded_file = st.file_uploader("Choose a CSV or Excel file", type=["csv", "xlsx"], accept_multiple_files=False)
 
-if uploaded_file is not None:
-    # To read file as bytes:
-    # Can be used wherever a "file-like" object is accepted:
-    try:
-        data = pd.read_csv(uploaded_file, sep=f"{Delimiter}")
-    except:
-        data = pd.read_excel(uploaded_file, sep=f"{Delimiter}")
+data = pd.read_csv(uploaded_file, sep=f"{Delimiter}")
+
+# if uploaded_file is not None:
+#     # To read file as bytes:
+#     # Can be used wherever a "file-like" object is accepted:
+#     try:
+#         data = pd.read_csv(uploaded_file, sep=f"{Delimiter}")
+#     except:
+#         data = pd.read_excel(uploaded_file, sep=f"{Delimiter}")
+
 
 # data = pd.read_csv('/Users/nineleaps/Downloads/081d31b4-b991-4cbf-a76c-1cfce9725594.csv')
-interest_rate  = data.groupby(['interest_rate']).agg({'interest_rate':'count' ,'npa_tag': 'mean'})
+interest_rate = data.groupby(['interest_rate']).agg({'interest_rate': 'count', 'npa_tag': 'mean'})
 
 # Rename the columns for clarity
-interest_rate = interest_rate.rename(columns={'npa_tag': 'risk' ,'interest_rate': 'total_count'})
+interest_rate = interest_rate.rename(columns={'npa_tag': 'risk', 'interest_rate': 'total_count'})
 
 # Calculate the ratio
-interest_rate['risk'] = interest_rate['risk']*100
+interest_rate['risk'] = interest_rate['risk'] * 100
 interest_rate = interest_rate.reset_index()
 
 # Group by 'interest_rate' and calculate the sum of 'npa_tag' and the count of rows
-data = data.groupby(['interest_rate','loan_amount']).agg({'npa_tag': 'mean'})
+data = data.groupby(['interest_rate', 'loan_amount']).agg({'npa_tag': 'mean'})
 
 # Rename the columns for clarity
 data = data.rename(columns={'npa_tag': 'risk'})
 
 # Calculate the ratio
-data['risk'] = data['risk']*100
+data['risk'] = data['risk'] * 100
 data = data.reset_index()
 # Define independent features (X) and the target variable (y)
 X = data[['interest_rate', 'loan_amount']]
 y = data['risk']
 
-st.write(f"Desired Hurdle rate is equal to {data.npa_tag.mean()*100+7+4}% and Net Risk is {data.npa_tag.mean()*100}%")
+st.write(
+    f"Desired Hurdle rate is equal to {data.risk.mean() * 100 + 7 + 4}% and Net Risk is {data.risk.mean() * 100}%")
 
 st.write("Interest rate vs risk table")
 st.write(interest_rate)
@@ -80,10 +85,10 @@ y_pred = regressor.predict(X_test)
 
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
-st.write((f'Mean Squared Error: {mse}'))
+# st.write((f'Mean Squared Error: {mse}'))
 # print(f'R-squared: {r2}')
 
-ir = st.text_input("Choose the Interest Rate To Predict The Risk", 28)
-lm = st.text_input("Choose the Loan Amount To Predict The Risk", 28)
-yp = regressor.predict(pd.DataFrame({"interest_rate": [28], "loan_amount": [100000]}))
+ir = st.text_input("Choose the Interest Rate To Predict The Risk", 16)
+lm = st.text_input("Choose the Loan Amount To Predict The Risk", 50000)
+yp = regressor.predict(pd.DataFrame({"interest_rate": [f"{ir}"], "loan_amount": [f"{lm}"]}))
 st.write(f"Predicted Risk is equal to {yp[0]}%")
