@@ -48,13 +48,17 @@ if uploaded_file is not None:
                                float(i[2:].split('<br/>')[-2].split(',')[1].strip().split(']')[0].strip())]
 
 
+    st.write(dic)
+
+
     def inorder_traversal(tree, i, node_information, node_sequence, sign):
         if i < 0:
             return
         node_sequence[i] = sign
         node_sequence_temp_left = node_sequence.copy()
         node_information[i] = (node_sequence, tree.tree_.impurity[i])
-        st.write(node_sequence)
+        st.write(i)
+        st.write()
         if tree.tree_.children_left[i] >= 0:
             node_information = inorder_traversal(tree, tree.tree_.children_left[i], node_information,
                                                  node_sequence_temp_left, "left")
