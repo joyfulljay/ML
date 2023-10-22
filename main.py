@@ -48,8 +48,6 @@ if uploaded_file is not None:
                                float(i[2:].split('<br/>')[-2].split(',')[1].strip().split(']')[0].strip())]
 
 
-
-
     def inorder_traversal(tree, i, node_information, node_sequence, sign):
         if i < 0:
             return
@@ -74,6 +72,8 @@ if uploaded_file is not None:
         return node_information
 
 
+
+
     # Example usage:
     # You need to provide the 'tree' object when calling this function
     # tree = your_decision_tree_object_here
@@ -82,6 +82,8 @@ if uploaded_file is not None:
     # st.write(node_seq)
 
     node_info = inorder_traversal(tree=clf, i=0, node_information={}, node_sequence={}, sign="left")
+
+    st.write(node_info)
 
 
     def information_typer(node_information, tree, gini_threshold, columns, dic):
@@ -168,7 +170,6 @@ if uploaded_file is not None:
 
     st.write(total_sample)
     st.write(required_sample)
-
 
     graph = graphviz.Source(dot_data)
 
