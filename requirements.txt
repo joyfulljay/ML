@@ -1,3 +1,5 @@
 scikit-learn
 graphviz
 pandas
+matplotlib
+numpy
