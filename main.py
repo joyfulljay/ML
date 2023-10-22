@@ -4,6 +4,8 @@ from sklearn.tree import DecisionTreeClassifier, export_graphviz
 import graphviz
 from PIL import Image
 import time
+import random
+from io import BytesIO
 
 # import matplotlib.pyplot as plt
 
