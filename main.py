@@ -4,8 +4,6 @@ from sklearn.tree import DecisionTreeClassifier, export_graphviz
 import graphviz
 from PIL import Image
 import time
-import random
-from io import BytesIO
 
 # import matplotlib.pyplot as plt
 
@@ -42,6 +40,7 @@ if uploaded_file is not None:
                                proportion=True)
     p = dot_data.split(";\n")
     dic = {}
+
     for i in p:
         index = i.find('samples')
         if index != -1:
@@ -58,14 +57,18 @@ if uploaded_file is not None:
         if tree.tree_.children_left[i] >= 0:
             node_information = inorder_traversal(tree, tree.tree_.children_left[i], node_information,
                                                  node_sequence_temp_left, "left")
+
         else:
             pass
+
         node_sequence_temp_right = node_sequence.copy()
+
         if tree.tree_.children_right[i] >= 0:
             node_information = inorder_traversal(tree, tree.tree_.children_right[i], node_information,
                                                  node_sequence_temp_right, "right")
         else:
             pass
+
         return node_information
 
 
@@ -75,10 +78,11 @@ if uploaded_file is not None:
     # node_info, node_seq = inorder_traversal(tree)
     # st.write(node_info)
     # st.write(node_seq)
+
     node_info = inorder_traversal(tree=clf, i=0, node_information={}, node_sequence={}, sign="left")
 
 
-    def information_typer(node_information, tree, gini_threshold, columns, dic, df):
+    def information_typer(node_information, tree, gini_threshold, columns, dic):
         information = []
         node_information = [y for x, y in node_information.items()]
         node_information = sorted(node_information, key=lambda x: x[1])
@@ -99,50 +103,76 @@ if uploaded_file is not None:
                             sign == "right"):
                         information_dic[(columns[clf.tree_.feature[node]], sign)] = [tree.tree_.threshold[node],
                                                                                      dic[node]]
+
             information.append(information_dic)
+
+        data = []
         for info in information:
             d = {'Conditions': '', 'Sample Size': None, 'Ratio': None}
+
             for feature, threshold in info.items():
+
                 if feature[0] == list(info.keys())[-1][0]:
                     d["Sample Size"] = threshold[1][0]
                     d["Ratio"] = threshold[1][1]
-                    st.write(f"Having total sample size is {threshold[1][0]} and ratio of yes is {threshold[1][1]}")
-                    st.write("--------------------------------------------------------------------")
+                    # st.write(f"Having total sample size is {threshold[1][0]} and ratio of yes is {threshold[1][1]}")
+                    # st.write("--------------------------------------------------------------------")
                 else:
                     if (threshold[0] == 0.5) and (feature[1] == "left"):
                         sp = feature[0].split("_")
                         a = sp[0]
                         b = sp[1]
-                        st.write(f"{a} is not {b} ", end='')
+                        # st.write(f"{a} is not {b} ", end='')
                         d["Conditions"] = d["Conditions"] + f"{a} is not {b}" + "\n"
                     elif (threshold[0] == 0.5) and (feature[1] == "right"):
                         sp = feature[0].split("_")
                         a = sp[0]
                         b = sp[1]
-                        st.write(f"{a} is {b} ", end='')
+                        # st.write(f"{a} is {b} ", end='')
                         d["Conditions"] = d["Conditions"] + f"{a} is not {b}" + "\n"
                     elif feature[1] == "left":
-                        st.write(f"{feature[0]} values less than {threshold[0]} ", end='')
+                        # st.write(f"{feature[0]} values less than {threshold[0]} ", end='')
                         d["Conditions"] = d["Conditions"] + f"{feature[0]} values less than {threshold[0]}" + "\n"
                     elif feature[1] == "right":
-                        st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
+                        # st.write(f"{feature[0]} values greater than {threshold[0]} ", end='')
                         d["Conditions"] = d["Conditions"] + f"{feature[0]} values greater than {threshold[0]}" + "\n"
-            df = df.append(d, ignore_index=True)
+            data.append(d)
+
+        # Create a DataFrame from the data
+        df = pd.DataFrame(data)
         df['Conditions'] = df['Conditions'].apply(lambda x: x.replace('\n', '--->'))
         df.loc[df["Conditions"] == "", "Conditions"] = "Total Sample Stats"
         df = df[~df["Ratio"].isna()]
+
         return df
 
 
-    df = pd.DataFrame(columns=["Conditions", "Sample Size", "Ratio"])
-    information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic, df=df)
-    st.write(df)
+    df = information_typer(node_info, clf, 0.3, list(bank.columns), dic=dic)
+
+    column_list = ["Conditions", "Sample Size", "Ratio"]
+
+    # Check if "100" is present in the "Sample Size" column
+    contains_100 = df["Sample Size"].str.contains("100")
+
+    # Filter rows where "Sample Size" contains "100"
+    total_sample = df[contains_100][column_list].reset_index(drop=True)
+
+    # Filter rows where "Sample Size" does not contain "100"
+    required_sample = df[~contains_100][column_list].reset_index(drop=True)
+
+    # Remove duplicate rows
+    required_sample = required_sample.drop_duplicates(subset=["Conditions"], keep="first")
+
+    st.write(total_sample)
+    st.write(required_sample)
+
+
     graph = graphviz.Source(dot_data)
-    filename = f"decision_tree_fin_{random.randint(1, 100)}"
-    # Render the graph to an image
-    # image = Image.open(BytesIO(dot_data.draw(format="png")))
-    # Display the image in Streamlit
-    # st.image(image, caption="Graphviz Graph", use_column_width=True)
-    st.image(graph.render(format='png', filename=filename))
-    image = Image.open(filename)
+
+    filename = f"decision_tree_fin_{time.time()}"
+
+    graph.render(format='png', filename=filename)
+
+    image = Image.open(f"{filename}.png")
+
     st.image(image)
