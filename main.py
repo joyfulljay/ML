@@ -47,6 +47,8 @@ if uploaded_file is not None:
             dic[int(i[:2])] = [i[2:].split('<br/>')[-3].split('=')[1].strip(),
                                float(i[2:].split('<br/>')[-2].split(',')[1].strip().split(']')[0].strip())]
 
+    st.write(dic)
+
 
     def inorder_traversal(tree, i, node_information, node_sequence, sign):
         if i < 0:
