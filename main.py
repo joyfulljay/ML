@@ -47,7 +47,7 @@ if uploaded_file is not None:
             dic[int(i[:2])] = [i[2:].split('<br/>')[-3].split('=')[1].strip(),
                                float(i[2:].split('<br/>')[-2].split(',')[1].strip().split(']')[0].strip())]
 
-    st.write(dic)
+
 
 
     def inorder_traversal(tree, i, node_information, node_sequence, sign):
@@ -92,6 +92,7 @@ if uploaded_file is not None:
             information_dic = {}
             if info[1] < gini_threshold:
                 for node, sign in info[0].items():
+                    st.write(f"{info}, {node}, {sign}")
                     if (columns[clf.tree_.feature[node]], sign) not in information_dic:
                         information_dic[(columns[clf.tree_.feature[node]], sign)] = [tree.tree_.threshold[node],
                                                                                      dic[node]]
