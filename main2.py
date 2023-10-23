@@ -49,7 +49,7 @@ X = data[['interest_rate', 'loan_amount']]
 y = data['risk']
 
 st.write(
-    f"Desired Hurdle rate is equal to {data.risk.mean()  + 7 + 4}% and Net Risk is {data.risk.mean() * 100}%")
+    f"Desired Hurdle rate is equal to {data.risk.mean()  + 7 + 4}% and Net Risk is {data.risk.mean()}%")
 
 st.write("Interest rate vs risk table")
 st.write(interest_rate)
